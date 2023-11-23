@@ -17,11 +17,27 @@ function App() {
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
-    //Size
+    // Size
     const sizes = {
       width: window.innerWidth,
       height: window.innerHeight,
     };
+
+    // Resize
+    const handleResize = () => {
+      sizes.width = window.innerWidth;
+      sizes.height = window.innerHeight;
+
+      // Update renderer size
+      renderer.setSize(sizes.width, sizes.height);
+
+      // Update camera aspect ratio
+      camera.aspect = sizes.width / sizes.height;
+      camera.updateProjectionMatrix();
+    };
+
+    // Event listener for resize
+    window.addEventListener("resize", handleResize);
 
     // Add light
     const light = new THREE.PointLight(0xffffff, 100, 100);
@@ -54,6 +70,11 @@ function App() {
     };
 
     animate();
+
+    // Clean up the event listener
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   return <canvas className="webgl" ref={canvasRef} />;
